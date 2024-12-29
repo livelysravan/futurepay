@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Pay - Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+    <div class="max-w-4xl mx-auto p-8">
+        <h1 class="text-3xl font-bold mb-6 text-center">Welcome to Future Pay</h1>
+
+        <!-- Your Wallet Balance -->
+        <div class="mb-6">
+            <p class="text-xl">Your Wallet Balance: <span id="walletBalance" class="font-bold">$500</span></p>
+        </div>
+
+        <!-- Friends List -->
+        <h2 class="text-2xl font-bold mb-4">Friends</h2>
+        <ul class="space-y-4">
+            <li>
+                <button onclick="startTransaction('Aditya Nair')" class="w-full text-left bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Aditya Nair</button>
+            </li>
+            <li>
+                <button onclick="startTransaction('Monu')" class="w-full text-left bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Monu</button>
+            </li>
+            <li>
+                <button onclick="startTransaction('Donald Trump')" class="w-full text-left bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Donald trump</button>
+            </li>
+        </ul>
+
+        <!-- Transaction Modal -->
+        <div id="transactionModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
+            <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+                <h2 class="text-2xl font-bold mb-4 text-center">Send Money to <span id="friendName"></span></h2>
+                <input type="number" id="amount" placeholder="Amount to Send" class="w-full p-2 border border-gray-300 rounded mb-4" required>
+                <button onclick="sendMoney()" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">Send Money</button>
+                <button onclick="closeModal()" class="w-full mt-4 text-gray-700 py-2 rounded-lg hover:bg-gray-300">Cancel</button>
+                <div id="sendingAnimation" class="hidden mt-4 text-center">
+                    <div class="animate-ping bg-blue-500 w-12 h-12 rounded-full mx-auto"></div>
+                    <p class="mt-2 text-blue-500">Sending...</p>
+                </div>
+                <div id="successMessage" class="hidden mt-4 text-center text-green-500">
+                    <p>Money Sent Successfully!</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let walletBalance = 500;
+        let friendName = '';
+
+        // Show Wallet Balance
+        document.getElementById('walletBalance').innerText = `$${walletBalance}`;
+
+        // Start a transaction with a friend
+        function startTransaction(friend) {
+            friendName = friend;
+            document.getElementById('friendName').innerText = friend;
+            document.getElementById('transactionModal').classList.remove('hidden');
+        }
+
+        // Close Modal
+        function closeModal() {
+            document.getElementById('transactionModal').classList.add('hidden');
+        }
+
+        // Send money and display animation
+        function sendMoney() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            if (isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid amount.');
+                return;
+            }
+
+            if (amount > walletBalance) {
+                alert('Insufficient funds!');
+                return;
+            }
+
+            // Deduct from wallet
+            walletBalance -= amount;
+            document.getElementById('walletBalance').innerText = `$${walletBalance}`;
+
+            // Show sending animation
+            document.getElementById('sendingAnimation').classList.remove('hidden');
+
+            // Simulate the sending process
+            setTimeout(() => {
+                // After sending, show success message
+                document.getElementById('sendingAnimation').classList.add('hidden');
+                document.getElementById('successMessage').classList.remove('hidden');
+
+                // Hide success message after 2 seconds
+                setTimeout(() => {
+                    document.getElementById('successMessage').classList.add('hidden');
+                    closeModal();
+                }, 2000);
+            }, 2000); // Simulate a 2-second delay for the transaction
+        }
+    </script>
+
+</body>
+</html>

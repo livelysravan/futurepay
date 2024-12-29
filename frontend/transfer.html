@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Pay - Send Money</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-80">
+        <h2 class="text-2xl font-bold mb-6 text-center">Send Money to <span id="friendName"></span></h2>
+        
+        <div class="mb-4">
+            <label for="amount" class="block text-sm font-medium text-gray-700">Amount:</label>
+            <input type="number" id="amount" name="amount" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+        </div>
+
+        <button class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600" onclick="sendMoney()">Send Money</button>
+        <p id="statusMessage" class="mt-4 text-green-500 text-center"></p>
+    </div>
+
+    <script>
+        // Fetch friend name from query params
+        const urlParams = new URLSearchParams(window.location.search);
+        const friendName = urlParams.get('friend');
+        document.getElementById('friendName').innerText = friendName;
+
+        let walletBalance = parseFloat(localStorage.getItem('walletBalance') || 500);
+
+        function sendMoney() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            if (isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid amount.');
+                return;
+            }
+
+            if (amount > walletBalance) {
+                alert('Insufficient funds!');
+                return;
+            }
+
+            walletBalance -= amount; // Decrease wallet balance
+            localStorage.setItem('walletBalance', walletBalance);
